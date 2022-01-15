@@ -37,6 +37,7 @@ variable "network" {
     subnet = object({
       load           = string
       transformation = string
+      orchestration  = string
     })
   })
   default = null
@@ -59,12 +60,14 @@ variable "project_create" {
 variable "project_id" {
   description = "Project id, references existing project if `project_create` is null."
   type = object({
-    landing = string
-    load    = string
+    landing       = string
+    load          = string
+    orchestration = string
   })
   default = {
-    landing = "lnd"
-    load    = "lod"
+    landing       = "lnd"
+    load          = "lod"
+    orchestration = "orc"
   }
 }
 
