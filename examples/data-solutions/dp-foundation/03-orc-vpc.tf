@@ -16,11 +16,11 @@
 #                                  Network                                    #
 ###############################################################################
 
-module "lod-vpc" {
+module "orc-vpc" {
   count      = var.network != null ? 1 : 0
   source     = "../../../modules/net-vpc"
-  project_id = module.lod-prj.project_id
-  name       = "${local.prefix_lod}-vpc"
+  project_id = module.orc-prj.project_id
+  name       = "${local.prefix_orc}-vpc"
   subnets = [
     {
       ip_cidr_range      = var.vpc_subnet_range
@@ -31,19 +31,19 @@ module "lod-vpc" {
   ]
 }
 
-module "lod-vpc-firewall" {
+module "orc-vpc-firewall" {
   count        = var.network != null ? 1 : 0
   source       = "../../../modules/net-vpc-firewall"
-  project_id   = module.lod-prj.project_id
-  network      = module.lod-vpc[0].name
+  project_id   = module.orc-prj.project_id
+  network      = module.orc-vpc[0].name
   admin_ranges = [var.vpc_subnet_range]
 }
 
-module "lod-nat" {
+module "orc-nat" {
   count          = var.network != null ? 1 : 0
   source         = "../../../modules/net-cloudnat"
-  project_id     = module.lod-prj.project_id
+  project_id     = module.orc-prj.project_id
   region         = var.region
-  name           = "${local.prefix_lod}-default"
-  router_network = module.lod-vpc[0].name
+  name           = "${local.prefix_orc}-default"
+  router_network = module.orc-vpc[0].name
 }
