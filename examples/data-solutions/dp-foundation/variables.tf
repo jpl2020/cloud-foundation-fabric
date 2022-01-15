@@ -30,6 +30,18 @@ variable "data_force_destroy" {
   default     = false
 }
 
+variable "network" {
+  description = "Shared VPC to use. If not null networks will be created in projects."
+  type = object({
+    network = string
+    subnet = object({
+      load           = string
+      transformation = string
+    })
+  })
+  default = null
+}
+
 variable "prefix" {
   description = "Unique prefix used for resource names. Not used for project if 'project_create' is null."
   type        = string
@@ -48,9 +60,11 @@ variable "project_id" {
   description = "Project id, references existing project if `project_create` is null."
   type = object({
     landing = string
+    load    = string
   })
   default = {
     landing = "lnd"
+    load    = "lod"
   }
 }
 

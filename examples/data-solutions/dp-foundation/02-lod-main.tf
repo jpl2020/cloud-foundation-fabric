@@ -13,81 +13,72 @@
 # limitations under the License.
 
 locals {
-  iam_lnd = {
-    # # TODO: replace with custom role at the org level
-    # "roles/bigquery.dataEditor" = [
-    #   module.landing-sa-bq-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/bigquery.dataViewer" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-scientists
-    # ]
+  iam_lod = {
     # "roles/bigquery.jobUser" = [
-    #   module.orch-sa-cmp-0.iam_email
-    # ]
-    # "roles/bigquery.user" = [
     #   module.load-sa-df-0.iam_email
     # ]
-    # "roles/pubsub.editor" = [
+    # "roles/compute.viewer" = [
+    #   # module.orch-sa-cmp-0.iam_email,
+    #   # module.load-sa-df-0.iam_email,
     #   local.groups_iam.data-engineers
     # ]
-    # "roles/pubsub.publisher" = [
-    #   module.landing-sa-ps-0.iam_email
+    # "roles/compute.serviceAgent" = [
+    #   "serviceAccount:${module.load-project.service_accounts.robots.compute}"
     # ]
-    # "roles/pubsub.subscriber" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email
-    # ]
-    # "roles/pubsub.viewer" = [
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/storage.objectAdmin" = [
-    #   module.load-sa-df-0.iam_email,
-    # ]
-    # "roles/storage.objectCreator" = [
-    #   module.landing-sa-cs-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/storage.objectViewer" = [
+    # "roles/dataflow.admin" = [
     #   module.orch-sa-cmp-0.iam_email,
     #   local.groups_iam.data-engineers,
-    #   local.groups_iam.data-scientists
+    #   # TODO: optimize permissions (worker)
+    #   module.load-sa-df-0.iam_email
+    # ]
+    # "roles/dataflow.developer" = [
+    #   module.orch-sa-cmp-0.iam_email,
+    #   local.groups_iam.data-engineers
+    # ]
+    # "roles/dataflow.worker" = [
+    #   module.load-sa-df-0.iam_email
+    # ]
+    # "roles/dataflow.serviceAgent" = [
+    #   # module.load-sa-df-0.iam_email
+    #   "serviceAccount:${module.load-project.service_accounts.robots.dataflow}"
+    # ]
+    # #TODO check if possible to restrict to object creator
+    # "roles/storage.objectAdmin" = [
+    #   module.load-sa-df-0.iam_email,
+    #   module.orch-sa-cmp-0.iam_email,
+    #   "serviceAccount:${module.load-project.service_accounts.robots.dataflow}"
     # ]
     # "roles/viewer" = [
     #   local.groups_iam.data-engineers
     # ]
-    # # TODO: restrict to storage.buckets.list/get (role for this does not natively exist)
-    # "roles/storage.admin" = [
-    #   module.load-sa-df-0.iam_email,
-    #   #TODO Added to temporarly fix impersonification
-    #   local.groups_iam.data-engineers
-    # ]
   }
-  prefix_lnd = "${var.prefix}-lnd"
+  prefix_lod = "${var.prefix}-lod"
 }
 
 ###############################################################################
 #                                 Project                                     #
 ###############################################################################
 
-module "lnd-prj" {
+module "lod-prj" {
   source          = "../../../modules/project"
-  name            = var.project_id["landing"]
+  name            = var.project_id["load"]
   parent          = try(var.project_create.parent, null)
   billing_account = try(var.project_create.billing_account_id, null)
   project_create  = var.project_create != null
   prefix          = var.project_create == null ? null : var.prefix
   # additive IAM bindings avoid disrupting bindings in existing project
-  iam          = var.project_create != null ? local.iam_lnd : {}
-  iam_additive = var.project_create == null ? local.iam_lnd : {}
+  iam          = var.project_create != null ? local.iam_lod : {}
+  iam_additive = var.project_create == null ? local.iam_lod : {}
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
     "bigquerystorage.googleapis.com",
+    "cloudkms.googleapis.com",
+    "compute.googleapis.com",
+    "dataflow.googleapis.com",
     "pubsub.googleapis.com",
+    "servicenetworking.googleapis.com",
     "storage.googleapis.com",
-    "storage-component.googleapis.com",
+    "storage-component.googleapis.com"
   ])
 }
