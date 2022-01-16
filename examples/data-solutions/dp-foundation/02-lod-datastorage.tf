@@ -33,10 +33,11 @@ module "lod-sa-df-0" {
 }
 
 module "lod-cs-df-0" {
-  source        = "../../../modules/gcs"
-  project_id    = module.lod-prj.project_id
-  name          = "lod-cs-0"
-  prefix        = local.prefix_lod
-  storage_class = "REGIONAL"
-  location      = var.region
+  source         = "../../../modules/gcs"
+  project_id     = module.lod-prj.project_id
+  name           = "lod-cs-0"
+  prefix         = local.prefix_lod
+  storage_class  = "REGIONAL"
+  location       = var.region
+  encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-bq.id, null) : null
 }

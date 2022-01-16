@@ -84,6 +84,7 @@ resource "google_composer_environment" "orc-cmp-0" {
       web_server_ipv4_cidr_block = var.composer_config.ip_range_web_server
     }
 
+    encryption_config = var.cmek_encryption ? try(module.kms[0].keys.key-cmp.id, null) : null
     # web_server_network_access_control {
     #   allowed_ip_range {
     #     value       = "172.16.0.0/12"

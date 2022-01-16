@@ -21,12 +21,35 @@ module "kms" {
     location = var.region
   }
   keys = {
+    key-bq  = null
+    key-cmp = null
     key-df  = null
     key-gcs = null
-    key-bq  = null
     key-ps  = null
   }
   key_iam = {
+    key-bq = {
+      "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
+        "serviceAccount:${module.lnd-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-0-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-1-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-2-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-exp-prj.service_accounts.robots.bq}",
+      ]
+    },
+    key-cmp = {
+      "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
+        "serviceAccount:${module.orc-prj.service_accounts.robots.composer}",
+      ]
+    },
+    key-df = {
+      "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
+        "serviceAccount:${module.lod-prj.service_accounts.robots.dataflow}",
+        "serviceAccount:${module.lod-prj.service_accounts.robots.compute}",
+        "serviceAccount:${module.trf-prj.service_accounts.robots.dataflow}",
+        "serviceAccount:${module.trf-prj.service_accounts.robots.compute}",
+      ]
+    }
     key-gcs = {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
         "serviceAccount:${module.lnd-prj.service_accounts.robots.storage}",
@@ -38,23 +61,6 @@ module "kms" {
         "serviceAccount:${module.dtl-exp-prj.service_accounts.robots.storage}",
       ]
     },
-    key-bq = {
-      "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
-        "serviceAccount:${module.lnd-prj.service_accounts.robots.bq}",
-        "serviceAccount:${module.dtl-0-prj.service_accounts.robots.bq}",
-        "serviceAccount:${module.dtl-1-prj.service_accounts.robots.bq}",
-        "serviceAccount:${module.dtl-2-prj.service_accounts.robots.bq}",
-        "serviceAccount:${module.dtl-exp-prj.service_accounts.robots.bq}",
-      ]
-    },
-    key-df = {
-      "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
-        "serviceAccount:${module.lod-prj.service_accounts.robots.dataflow}",
-        "serviceAccount:${module.lod-prj.service_accounts.robots.compute}",
-        "serviceAccount:${module.trf-prj.service_accounts.robots.dataflow}",
-        "serviceAccount:${module.trf-prj.service_accounts.robots.compute}",
-      ]
-    }
     key-ps = {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
         "serviceAccount:${module.lnd-prj.service_accounts.robots.pubsub}"

@@ -16,11 +16,12 @@
 #                                   GCS                                       #
 ###############################################################################
 
-module "orch-bucket-cf-0" {
-  source        = "../../../modules/gcs"
-  project_id    = module.orc-prj.project_id
-  name          = "orc-cs-0"
-  prefix        = local.prefix_orc
-  location      = var.region
-  storage_class = "REGIONAL"
+module "orc-cs-0" {
+  source         = "../../../modules/gcs"
+  project_id     = module.orc-prj.project_id
+  name           = "orc-cs-0"
+  prefix         = local.prefix_orc
+  location       = var.region
+  storage_class  = "REGIONAL"
+  encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-gcs.id, null) : null
 }
