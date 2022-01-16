@@ -35,12 +35,13 @@ module "trf-sa-df-0" {
 }
 
 module "trf-cs-df-0" {
-  source        = "../../../modules/gcs"
-  project_id    = module.trf-prj.project_id
-  name          = "trf-cs-0"
-  prefix        = local.prefix_trf
-  location      = var.region
-  storage_class = "REGIONAL"
+  source         = "../../../modules/gcs"
+  project_id     = module.trf-prj.project_id
+  name           = "trf-cs-0"
+  prefix         = local.prefix_trf
+  location       = var.region
+  storage_class  = "REGIONAL"
+  encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-gcs.id, null) : null
 }
 
 ###############################################################################
