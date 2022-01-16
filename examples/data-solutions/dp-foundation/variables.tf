@@ -38,6 +38,7 @@ variable "network" {
       load           = string
       transformation = string
       orchestration  = string
+      trasformation  = string
     })
   })
   default = null
@@ -63,11 +64,13 @@ variable "project_id" {
     landing       = string
     load          = string
     orchestration = string
+    trasformation = string
   })
   default = {
     landing       = "lnd"
     load          = "lod"
     orchestration = "orc"
+    trasformation = "trf"
   }
 }
 
