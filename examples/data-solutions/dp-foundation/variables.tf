@@ -65,12 +65,14 @@ variable "project_id" {
     load          = string
     orchestration = string
     trasformation = string
+    datalake      = string
   })
   default = {
     landing       = "lnd"
     load          = "lod"
     orchestration = "orc"
     trasformation = "trf"
+    datalake      = "dtl"
   }
 }
 
