@@ -133,3 +133,27 @@ module "dtl-2-prj" {
     "storage-component.googleapis.com"
   ])
 }
+
+module "dtl-exp-prj" {
+  source          = "../../../modules/project"
+  name            = "${var.project_id["datalake"]}-exp"
+  parent          = try(var.project_create.parent, null)
+  billing_account = try(var.project_create.billing_account_id, null)
+  project_create  = var.project_create != null
+  prefix          = var.project_create == null ? null : var.prefix
+  # additive IAM bindings avoid disrupting bindings in existing project
+  iam          = var.project_create != null ? local.iam_dtl : {}
+  iam_additive = var.project_create == null ? local.iam_dtl : {}
+  services = concat(var.project_services, [
+    "bigquery.googleapis.com",
+    "bigqueryreservation.googleapis.com",
+    "bigquerystorage.googleapis.com",
+    "cloudkms.googleapis.com",
+    "compute.googleapis.com",
+    "dataflow.googleapis.com",
+    "pubsub.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "storage.googleapis.com",
+    "storage-component.googleapis.com"
+  ])
+}

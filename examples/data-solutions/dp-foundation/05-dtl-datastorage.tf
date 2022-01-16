@@ -30,10 +30,17 @@ module "dtl-1-bq-0" {
   encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-bq.id, null) : null
 }
 
-module "dtl--2-bq-0" {
+module "dtl-2-bq-0" {
   source         = "../../../modules/bigquery-dataset"
   project_id     = module.dtl-2-prj.project_id
   id             = "${replace(local.prefix_lnd, "-", "_")}_2_bq_0"
+  encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-bq.id, null) : null
+}
+
+module "dtl-exp-bq-0" {
+  source         = "../../../modules/bigquery-dataset"
+  project_id     = module.dtl-exp-prj.project_id
+  id             = "${replace(local.prefix_lnd, "-", "_")}_exp_bq_0"
   encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-bq.id, null) : null
 }
 
@@ -63,6 +70,15 @@ module "dtl-2-cs-0" {
   source         = "../../../modules/gcs"
   project_id     = module.dtl-2-prj.project_id
   name           = "2-cs-0"
+  prefix         = local.prefix_dtl
+  encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-gcs.id, null) : null
+  force_destroy  = var.data_force_destroy
+}
+
+module "dtl-exp-cs-0" {
+  source         = "../../../modules/gcs"
+  project_id     = module.dtl-exp-prj.project_id
+  name           = "exp-cs-0"
   prefix         = local.prefix_dtl
   encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-gcs.id, null) : null
   force_destroy  = var.data_force_destroy
