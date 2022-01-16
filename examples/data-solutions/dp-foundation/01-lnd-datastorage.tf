@@ -70,5 +70,5 @@ module "lnd-sa-bq-0" {
 module "landing-dataset-bq-0" {
   source     = "../../../modules/bigquery-dataset"
   project_id = module.lnd-prj.project_id
-  id         = "${local.prefix_lnd}_bq_0"
+  id         = "${replace(local.prefix_lnd, "-", "_")}_bq_0"
 }
