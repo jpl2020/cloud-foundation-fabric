@@ -88,13 +88,3 @@ module "orc-prj" {
     "storage-component.googleapis.com"
   ])
 }
-
-module "orc-sa-cmp-0" {
-  source     = "../../../modules/iam-service-account"
-  project_id = module.orc-prj.project_id
-  name       = "orc-cmp-0"
-  prefix     = local.prefix_orc
-  iam = {
-    # "roles/iam.serviceAccountTokenCreator" = [local.groups_iam.data-engineers]
-  }
-}

@@ -17,7 +17,7 @@
 ###############################################################################
 
 module "orc-vpc" {
-  count      = var.network != null ? 1 : 0
+  count      = can(var.network.network) ? 0 : 1
   source     = "../../../modules/net-vpc"
   project_id = module.orc-prj.project_id
   name       = "${local.prefix_orc}-vpc"
@@ -32,7 +32,7 @@ module "orc-vpc" {
 }
 
 module "orc-vpc-firewall" {
-  count        = var.network != null ? 1 : 0
+  count        = can(var.network.network) ? 0 : 1
   source       = "../../../modules/net-vpc-firewall"
   project_id   = module.orc-prj.project_id
   network      = module.orc-vpc[0].name
@@ -40,7 +40,7 @@ module "orc-vpc-firewall" {
 }
 
 module "orc-nat" {
-  count          = var.network != null ? 1 : 0
+  count          = can(var.network.network) ? 0 : 1
   source         = "../../../modules/net-cloudnat"
   project_id     = module.orc-prj.project_id
   region         = var.region

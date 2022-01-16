@@ -18,6 +18,21 @@ variable "cmek_encryption" {
   default     = false
 }
 
+variable "composer_config" {
+  type = object({
+    ip_range_cloudsql   = string
+    ip_range_gke_master = string
+    ip_range_web_server = string
+    region              = string
+  })
+  default = {
+    ip_range_cloudsql   = "10.0.10.0/24"
+    ip_range_gke_master = "10.0.11.0/28"
+    ip_range_web_server = "10.0.11.16/28"
+    region              = "europe-west1"
+  }
+}
+
 variable "data_eng_principals" {
   description = "Groups with Service Account Token creator role on service accounts in IAM format, eg 'group:group@domain.com'."
   type        = list(string)

@@ -17,7 +17,7 @@
 ###############################################################################
 
 module "trf-vpc" {
-  count      = var.network != null ? 1 : 0
+  count      = can(var.network.network) ? 0 : 1
   source     = "../../../modules/net-vpc"
   project_id = module.trf-prj.project_id
   name       = "${local.prefix_trf}-vpc"
@@ -32,7 +32,7 @@ module "trf-vpc" {
 }
 
 module "trf-vpc-firewall" {
-  count        = var.network != null ? 1 : 0
+  count        = can(var.network.network) ? 0 : 1
   source       = "../../../modules/net-vpc-firewall"
   project_id   = module.trf-prj.project_id
   network      = module.trf-vpc[0].name
@@ -40,7 +40,7 @@ module "trf-vpc-firewall" {
 }
 
 module "trf-nat" {
-  count          = var.network != null ? 1 : 0
+  count          = can(var.network.network) ? 0 : 1
   source         = "../../../modules/net-cloudnat"
   project_id     = module.trf-prj.project_id
   region         = var.region

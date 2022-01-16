@@ -17,7 +17,7 @@
 ###############################################################################
 
 module "lod-vpc" {
-  count      = var.network != null ? 1 : 0
+  count      = can(var.network.network) ? 0 : 1
   source     = "../../../modules/net-vpc"
   project_id = module.lod-prj.project_id
   name       = "${local.prefix_lod}-vpc"
@@ -32,7 +32,7 @@ module "lod-vpc" {
 }
 
 module "lod-vpc-firewall" {
-  count        = var.network != null ? 1 : 0
+  count        = can(var.network.network) ? 0 : 1
   source       = "../../../modules/net-vpc-firewall"
   project_id   = module.lod-prj.project_id
   network      = module.lod-vpc[0].name
@@ -40,7 +40,7 @@ module "lod-vpc-firewall" {
 }
 
 module "lod-nat" {
-  count          = var.network != null ? 1 : 0
+  count          = can(var.network.network) ? 0 : 1
   source         = "../../../modules/net-cloudnat"
   project_id     = module.lod-prj.project_id
   region         = var.region
