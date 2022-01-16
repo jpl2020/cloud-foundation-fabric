@@ -86,6 +86,7 @@ module "lnd-prj" {
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
     "bigquerystorage.googleapis.com",
+    "cloudkms.googleapis.com",
     "pubsub.googleapis.com",
     "storage.googleapis.com",
     "storage-component.googleapis.com",

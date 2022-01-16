@@ -1,0 +1,2 @@
+ - GCS and BQ regional
+ - KMS: Regional keyring, one key per product
