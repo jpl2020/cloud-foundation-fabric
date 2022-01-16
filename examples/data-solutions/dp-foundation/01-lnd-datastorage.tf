@@ -29,7 +29,7 @@ module "lnd-sa-cs-0" {
   prefix     = local.prefix_lnd
 }
 
-module "lnd-bucket-cs-0" {
+module "lnd-cs-0" {
   source           = "../../../modules/gcs"
   project_id       = module.lnd-prj.project_id
   name             = "cs-0"
@@ -69,7 +69,7 @@ module "lnd-sa-bq-0" {
   prefix     = local.prefix_lnd
 }
 
-module "landing-dataset-bq-0" {
+module "lnd-bq-0" {
   source         = "../../../modules/bigquery-dataset"
   project_id     = module.lnd-prj.project_id
   id             = "${replace(local.prefix_lnd, "-", "_")}_bq_0"

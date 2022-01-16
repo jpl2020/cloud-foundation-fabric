@@ -1,2 +1,3 @@
  - GCS and BQ regional
  - KMS: Regional keyring, one key per product
+ - Composer require "Require OS Login" not enforced
