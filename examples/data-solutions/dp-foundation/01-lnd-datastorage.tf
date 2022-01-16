@@ -34,6 +34,8 @@ module "lnd-bucket-cs-0" {
   project_id       = module.lnd-prj.project_id
   name             = "cs-0"
   prefix           = local.prefix_lnd
+  location         = var.region
+  storage_class    = "REGIONAL"
   retention_policy = local.lnd_bucket_retention_policy
   encryption_key   = var.cmek_encryption ? try(module.kms[0].keys.key-gcs.id, null) : null
   force_destroy    = var.data_force_destroy
@@ -71,5 +73,6 @@ module "landing-dataset-bq-0" {
   source         = "../../../modules/bigquery-dataset"
   project_id     = module.lnd-prj.project_id
   id             = "${replace(local.prefix_lnd, "-", "_")}_bq_0"
+  location       = var.region
   encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-bq.id, null) : null
 }

@@ -78,6 +78,7 @@ module "orc-prj" {
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
     "bigquerystorage.googleapis.com",
+    "cloudkms.googleapis.com",
     "composer.googleapis.com",
     "container.googleapis.com",
     "dataflow.googleapis.com",

@@ -35,10 +35,12 @@ module "trf-sa-df-0" {
 }
 
 module "trf-cs-df-0" {
-  source     = "../../../modules/gcs"
-  project_id = module.trf-prj.project_id
-  name       = "trf-cs-0"
-  prefix     = local.prefix_trf
+  source        = "../../../modules/gcs"
+  project_id    = module.trf-prj.project_id
+  name          = "trf-cs-0"
+  prefix        = local.prefix_trf
+  location      = var.region
+  storage_class = "REGIONAL"
 }
 
 ###############################################################################

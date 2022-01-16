@@ -29,18 +29,30 @@ module "kms" {
   key_iam = {
     key-gcs = {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
-        "serviceAccount:${module.lnd-prj.service_accounts.robots.storage}"
+        "serviceAccount:${module.lnd-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.lod-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.orc-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.dtl-0-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.dtl-1-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.dtl-2-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.dtl-exp-prj.service_accounts.robots.storage}",
       ]
     },
     key-bq = {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
-        "serviceAccount:${module.lnd-prj.service_accounts.robots.bq}"
+        "serviceAccount:${module.lnd-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-0-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-1-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-2-prj.service_accounts.robots.bq}",
+        "serviceAccount:${module.dtl-exp-prj.service_accounts.robots.bq}",
       ]
     },
     key-df = {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
-        "serviceAccount:${module.lnd-prj.service_accounts.robots.dataflow}",
-        "serviceAccount:${module.lnd-prj.service_accounts.robots.compute}",
+        "serviceAccount:${module.lod-prj.service_accounts.robots.dataflow}",
+        "serviceAccount:${module.lod-prj.service_accounts.robots.compute}",
+        "serviceAccount:${module.trf-prj.service_accounts.robots.dataflow}",
+        "serviceAccount:${module.trf-prj.service_accounts.robots.compute}",
       ]
     }
     key-ps = {
