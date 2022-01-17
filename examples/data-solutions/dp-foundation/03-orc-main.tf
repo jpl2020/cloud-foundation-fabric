@@ -75,6 +75,7 @@ module "orc-prj" {
   iam          = var.project_create != null ? local.iam_orc : {}
   iam_additive = var.project_create == null ? local.iam_orc : {}
   services = concat(var.project_services, [
+    "artifactregistry.googleapis.com",
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
     "bigquerystorage.googleapis.com",
