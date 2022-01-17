@@ -27,45 +27,36 @@ locals {
     "roles/composer.worker" = [
       module.orc-sa-cmp-0.iam_email
     ]
+    "roles/compute.networkUser" = [
+      module.orc-sa-cmp-0.iam_email,
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email,
+      "serviceAccount:${module.orc-prj.service_accounts.robots.container-engine}",
+      "serviceAccount:${module.lod-prj.service_accounts.robots.dataflow}",
+      "serviceAccount:${module.trf-prj.service_accounts.robots.dataflow}",
+      "serviceAccount:${module.orc-prj.service_accounts.cloud_services}"
+    ]
     "roles/storage.objectAdmin" = [
-      module.load-sa-df-0.iam_email,
-      module.orch-sa-cmp-0.iam_email,
+      module.lod-sa-df-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
     ]
     "roles/storage.admin" = [
       module.lod-sa-df-0.iam_email,
       module.trf-sa-df-0.iam_email
     ]
   }
-  iam_group_orc = {
-    "roles/bigquery.dataEditor" = [
-      local.groups_iam.data-engineers
-    ]
-    "roles/bigquery.dataViewer" = [
-      local.groups_iam.data-scientists
-    ]
-    "roles/bigquery.jobUser" = [
-      local.groups_iam.data-engineers,
-    ]
-    "roles/composer.admin" = [
-      local.groups_iam.data-engineers
-    ]
-    "roles/composer.environmentAndStorageObjectAdmin" = [
-      local.groups_iam.data-engineers
-    ]
-    "roles/composer.worker" = [
-      module.orc-sa-cmp-0.iam_email
-    ]
-    "roles/iap.httpsResourceAccessor" = [
-      local.groups_iam.data-engineers,
-    ]
-    "roles/storage.objectAdmin" = [
-      local.groups_iam.data-engineers,
-    ]
-    "roles/storage.admin" = [
-      local.groups_iam.data-engineers,
-    ]
-    "roles/cloudbuild.builds.editor" = [
-      local.groups_iam.data-engineers
+  group_iam_orc = {
+    "${local.groups.data-engineers}" = [
+      "roles/bigquery.dataEditor",
+      "roles/bigquery.jobUser",
+      "roles/cloudbuild.builds.editor",
+      "roles/composer.admin",
+      "roles/composer.environmentAndStorageObjectAdmin",
+      "roles/iap.httpsResourceAccessor",
+      "roles/compute.networkUser",
+      "roles/storage.objectAdmin",
+      "roles/storage.admin",
+      "roles/compute.networkUser"
     ]
   }
   prefix_orc = "${var.prefix}-orc"
@@ -81,6 +72,7 @@ module "orc-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_orc : {}
   iam_additive = var.project_create == null ? local.iam_orc : {}
+  group_iam    = local.group_iam_orc
   services = concat(var.project_services, [
     "artifactregistry.googleapis.com",
     "bigquery.googleapis.com",

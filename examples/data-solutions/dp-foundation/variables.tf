@@ -24,19 +24,21 @@ variable "composer_config" {
     ip_range_gke_master = string
     ip_range_web_server = string
     region              = string
+    secondary_ip_range = object({
+      pods     = string
+      services = string
+    })
   })
   default = {
-    ip_range_cloudsql   = "10.0.10.0/24"
-    ip_range_gke_master = "10.0.11.0/28"
-    ip_range_web_server = "10.0.11.16/28"
+    ip_range_cloudsql   = "10.20.10.0/24"
+    ip_range_gke_master = "10.20.11.0/28"
+    ip_range_web_server = "10.20.11.16/28"
     region              = "europe-west1"
+    secondary_ip_range = {
+      pods     = "10.10.8.0/22"
+      services = "10.10.12.0/24"
+    }
   }
-}
-
-variable "data_eng_principals" {
-  description = "Groups with Service Account Token creator role on service accounts in IAM format, eg 'group:group@domain.com'."
-  type        = list(string)
-  default     = []
 }
 
 variable "data_force_destroy" {
@@ -45,18 +47,40 @@ variable "data_force_destroy" {
   default     = false
 }
 
-variable "network" {
+variable "groups" {
+  description = "Groups."
+  type        = map(string)
+  default = {
+    data-engineers  = "gcp-data-engineers"
+    data-scientists = "gcp-data-scientists"
+  }
+}
+
+variable "network_config" {
   description = "Shared VPC to use. If not null networks will be created in projects."
   type = object({
     network = string
-    subnet = object({
+    vpc_subnet_range = object({
       load           = string
       transformation = string
       orchestration  = string
-      trasformation  = string
     })
   })
-  default = null
+  default = {
+    network = null
+    vpc_subnet_range = {
+      load           = "10.10.0.0/24"
+      transformation = "10.10.0.0/24"
+      orchestration  = "10.10.0.0/24"
+    }
+  }
+}
+
+variable "organization" {
+  description = "Organization details."
+  type = object({
+    domain = string
+  })
 }
 
 variable "prefix" {
@@ -105,10 +129,4 @@ variable "region" {
   description = "The region where resources will be deployed."
   type        = string
   default     = "europe-west1"
-}
-
-variable "vpc_subnet_range" {
-  description = "Ip range used for the VPC subnet created for the example."
-  type        = string
-  default     = "10.0.0.0/20"
 }

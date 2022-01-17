@@ -22,13 +22,12 @@ module "lod-sa-df-0" {
   name       = "lod-df-0"
   prefix     = local.prefix_lod
   iam = {
-    # "roles/iam.serviceAccountTokenCreator" = [
-    #   local.groups_iam.data-engineers
-    # ],
-    # "roles/iam.serviceAccountUser" = [
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
+    "roles/iam.serviceAccountTokenCreator" = [
+      local.groups_iam.data-engineers
+    ],
+    "roles/iam.serviceAccountUser" = [
+      module.orc-sa-cmp-0.iam_email,
+    ]
   }
 }
 

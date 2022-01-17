@@ -41,7 +41,7 @@ module "kms" {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
         "serviceAccount:${module.orc-prj.service_accounts.robots.artifactregistry}",
         "serviceAccount:${module.orc-prj.service_accounts.robots.container-engine}",
-        "serviceAccount:${module.orc-prj.service_accounts.robots.container-system}",
+        "serviceAccount:${module.orc-prj.service_accounts.robots.compute}",
         "serviceAccount:${module.orc-prj.service_accounts.robots.composer}",
         "serviceAccount:${module.orc-prj.service_accounts.robots.pubsub}",
         "serviceAccount:${module.orc-prj.service_accounts.robots.storage}",
@@ -58,13 +58,14 @@ module "kms" {
     }
     key-gcs = {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
-        "serviceAccount:${module.lnd-prj.service_accounts.robots.storage}",
-        "serviceAccount:${module.lod-prj.service_accounts.robots.storage}",
-        "serviceAccount:${module.orc-prj.service_accounts.robots.storage}",
         "serviceAccount:${module.dtl-0-prj.service_accounts.robots.storage}",
         "serviceAccount:${module.dtl-1-prj.service_accounts.robots.storage}",
         "serviceAccount:${module.dtl-2-prj.service_accounts.robots.storage}",
         "serviceAccount:${module.dtl-exp-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.lnd-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.lod-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.orc-prj.service_accounts.robots.storage}",
+        "serviceAccount:${module.trf-prj.service_accounts.robots.storage}",
       ]
     },
     key-ps = {

@@ -22,15 +22,12 @@ module "trf-sa-df-0" {
   name       = "trf-df-0"
   prefix     = local.prefix_trf
   iam = {
-    # "roles/iam.serviceAccountTokenCreator" = [
-    #   local.groups_iam.data-engineers,
-    #   # allows Python operator in Composer to impersonate DF SA
-    #   module.orch-sa-cmp-0.iam_email
-    # ],
-    # "roles/iam.serviceAccountUser" = [
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
+    "roles/iam.serviceAccountTokenCreator" = [
+      local.groups_iam.data-engineers,
+    ],
+    "roles/iam.serviceAccountUser" = [
+      module.orc-sa-cmp-0.iam_email,
+    ]
   }
 }
 
@@ -54,14 +51,11 @@ module "trf-sa-bq-0" {
   name       = "trf-bq-0"
   prefix     = local.prefix_trf
   iam = {
-    # "roles/iam.serviceAccountTokenCreator" = [
-    #   local.groups_iam.data-engineers,
-    #   # allows Python operator in Composer to impersonate DF SA
-    #   module.orch-sa-cmp-0.iam_email
-    # ],
-    # "roles/iam.serviceAccountUser" = [
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
+    "roles/iam.serviceAccountTokenCreator" = [
+      local.groups_iam.data-engineers,
+    ],
+    "roles/iam.serviceAccountUser" = [
+      module.orc-sa-cmp-0.iam_email,
+    ]
   }
 }

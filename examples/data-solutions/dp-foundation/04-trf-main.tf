@@ -13,31 +13,31 @@
 # limitations under the License.
 
 locals {
+  group_iam_trf = {
+    "${local.groups.data-engineers}" = [
+      "roles/bigquery.jobUser",
+      "roles/dataflow.admin",
+      "roles/viewer",
+    ]
+  }
   iam_trf = {
-    # "roles/bigquery.dataViewer" = [
-    #   module.orch-sa-cmp-0.iam_email
-    # ]
-    # "roles/bigquery.jobUser" = [
-    #   module.transf-sa-bq-0.iam_email,
-    #   local.groups_iam.data-engineers,
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/dataflow.admin" = [
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/dataflow.worker" = [
-    #   module.transf-sa-df-0.iam_email
-    # ]
-    # "roles/storage.objectAdmin" = [
-    #   module.transf-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   "serviceAccount:${module.transf-project.service_accounts.robots.dataflow}"
-    # ]
-    # "roles/viewer" = [
-    #   local.groups_iam.cloud-architects,
-    #   local.groups_iam.data-engineers
-    # ]
+    "roles/bigquery.dataViewer" = [
+      module.orc-sa-cmp-0.iam_email
+    ]
+    "roles/bigquery.jobUser" = [
+      module.trf-sa-bq-0.iam_email,
+    ]
+    "roles/dataflow.admin" = [
+      module.orc-sa-cmp-0.iam_email,
+    ]
+    "roles/dataflow.worker" = [
+      module.trf-sa-df-0.iam_email
+    ]
+    "roles/storage.objectAdmin" = [
+      module.trf-sa-df-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
+      "serviceAccount:${module.trf-prj.service_accounts.robots.dataflow}"
+    ]
   }
   prefix_trf = "${var.prefix}-trf"
 }
@@ -56,6 +56,7 @@ module "trf-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_trf : {}
   iam_additive = var.project_create == null ? local.iam_trf : {}
+  group_iam    = local.group_iam_trf
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",

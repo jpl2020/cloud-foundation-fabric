@@ -17,13 +17,13 @@
 ###############################################################################
 
 module "trf-vpc" {
-  count      = can(var.network.network) ? 0 : 1
+  count      = var.network_config.network != null ? 0 : 1
   source     = "../../../modules/net-vpc"
   project_id = module.trf-prj.project_id
-  name       = "${local.prefix_trf}-vpc"
+  name       = "${local.prefix_trf}-trf-vpc"
   subnets = [
     {
-      ip_cidr_range      = var.vpc_subnet_range
+      ip_cidr_range      = var.network_config.vpc_subnet_range.transformation
       name               = "subnet"
       region             = var.region
       secondary_ip_range = {}
@@ -32,15 +32,15 @@ module "trf-vpc" {
 }
 
 module "trf-vpc-firewall" {
-  count        = can(var.network.network) ? 0 : 1
+  count        = var.network_config.network != null ? 0 : 1
   source       = "../../../modules/net-vpc-firewall"
   project_id   = module.trf-prj.project_id
   network      = module.trf-vpc[0].name
-  admin_ranges = [var.vpc_subnet_range]
+  admin_ranges = values(module.orc-vpc[0].subnet_ips)
 }
 
 module "trf-nat" {
-  count          = can(var.network.network) ? 0 : 1
+  count          = var.network_config.network != null ? 0 : 1
   source         = "../../../modules/net-cloudnat"
   project_id     = module.trf-prj.project_id
   region         = var.region

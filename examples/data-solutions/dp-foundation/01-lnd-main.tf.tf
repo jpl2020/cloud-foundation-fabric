@@ -13,57 +13,54 @@
 # limitations under the License.
 
 locals {
+  group_iam_lnd = {
+    "${local.groups.data-engineers}" = [
+      "roles/bigquery.dataEditor",
+      "roles/pubsub.editor",
+      "roles/storage.admin",
+      "roles/storage.objectViewer",
+      "roles/viewer",
+    ],
+    # "${local.groups.data-scientists}" = [
+    #   "roles/bigquery.dataViewer",
+    #   "roles/bigquery.jobUser",
+    #   "roles/bigquery.user",
+    #   "roles/pubsub.viewer",
+    # ]
+  }
   iam_lnd = {
-    # # TODO: replace with custom role at the org level
-    # "roles/bigquery.dataEditor" = [
-    #   module.landing-sa-bq-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/bigquery.dataViewer" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/bigquery.jobUser" = [
-    #   module.orch-sa-cmp-0.iam_email
-    # ]
-    # "roles/bigquery.user" = [
-    #   module.load-sa-df-0.iam_email
-    # ]
-    # "roles/pubsub.editor" = [
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/pubsub.publisher" = [
-    #   module.landing-sa-ps-0.iam_email
-    # ]
-    # "roles/pubsub.subscriber" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email
-    # ]
-    # "roles/pubsub.viewer" = [
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/storage.objectAdmin" = [
-    #   module.load-sa-df-0.iam_email,
-    # ]
-    # "roles/storage.objectCreator" = [
-    #   module.landing-sa-cs-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/storage.objectViewer" = [
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers,
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/viewer" = [
-    #   local.groups_iam.data-engineers
-    # ]
-    # # TODO: restrict to storage.buckets.list/get (role for this does not natively exist)
-    # "roles/storage.admin" = [
-    #   module.load-sa-df-0.iam_email,
-    #   #TODO Added to temporarly fix impersonification
-    #   local.groups_iam.data-engineers
-    # ]
+    "roles/bigquery.dataEditor" = [
+      module.lnd-sa-bq-0.iam_email,
+    ]
+    "roles/bigquery.dataViewer" = [
+      module.lod-sa-df-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
+    ]
+    "roles/bigquery.jobUser" = [
+      module.orc-sa-cmp-0.iam_email
+    ]
+    "roles/bigquery.user" = [
+      module.lod-sa-df-0.iam_email
+    ]
+    "roles/pubsub.publisher" = [
+      module.lnd-sa-ps-0.iam_email
+    ]
+    "roles/pubsub.subscriber" = [
+      module.lod-sa-df-0.iam_email,
+      module.orc-sa-cmp-0.iam_email
+    ]
+    "roles/storage.objectAdmin" = [
+      module.lod-sa-df-0.iam_email,
+    ]
+    "roles/storage.objectCreator" = [
+      module.lnd-sa-cs-0.iam_email,
+    ]
+    "roles/storage.objectViewer" = [
+      module.orc-sa-cmp-0.iam_email,
+    ]
+    "roles/storage.admin" = [
+      module.lod-sa-df-0.iam_email,
+    ]
   }
   prefix_lnd = "${var.prefix}-lnd"
 }
@@ -82,6 +79,7 @@ module "lnd-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_lnd : {}
   iam_additive = var.project_create == null ? local.iam_lnd : {}
+  # group_iam    = local.group_iam_lnd
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",

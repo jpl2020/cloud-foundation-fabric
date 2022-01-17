@@ -13,47 +13,44 @@
 # limitations under the License.
 
 locals {
+  group_iam_dtl = {
+    "${local.groups.data-engineers}" = [
+      "roles/bigquery.dataEditor",
+      "roles/storage.admin",
+      "roles/storage.objectCreator",
+      "roles/storage.objectViewer",
+      "roles/viewer",
+    ],
+    # "${local.groups.data-scientists}" = [
+    #   "roles/bigquery.jobUser",
+    # ]
+  }
   iam_dtl = {
-    # # TODO: replace with custom role at the org level
-    # "roles/bigquery.dataEditor" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.transf-sa-df-0.iam_email,
-    #   module.transf-sa-bq-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/bigquery.dataViewer" = [
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/bigquery.jobUser" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.transf-sa-df-0.iam_email,
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/storage.objectCreator" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.transf-sa-df-0.iam_email,
-    #   module.transf-sa-bq-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/storage.objectViewer" = [
-    #   module.transf-sa-df-0.iam_email,
-    #   module.transf-sa-bq-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers,
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/viewer" = [
-    #   local.groups_iam.data-engineers
-    # ]
-    # # TODO: restrict to storage.buckets.list/get (role for this does not natively exist)
-    # "roles/storage.admin" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.transf-sa-df-0.iam_email,
-    #   #TODO Added to temporarly fix impersonification
-    #   local.groups_iam.data-engineers
-    # ]
+    "roles/bigquery.dataEditor" = [
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email,
+      module.trf-sa-bq-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
+    ]
+    "roles/bigquery.jobUser" = [
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email,
+    ]
+    "roles/storage.admin" = [
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email,
+    ]
+    "roles/storage.objectCreator" = [
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email,
+      module.trf-sa-bq-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
+    ]
+    "roles/storage.objectViewer" = [
+      module.trf-sa-df-0.iam_email,
+      module.trf-sa-bq-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
+    ]
   }
   prefix_dtl = "${var.prefix}-dtl"
 }
@@ -72,6 +69,7 @@ module "dtl-0-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_dtl : {}
   iam_additive = var.project_create == null ? local.iam_dtl : {}
+  group_iam    = local.group_iam_dtl
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
@@ -96,6 +94,7 @@ module "dtl-1-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_dtl : {}
   iam_additive = var.project_create == null ? local.iam_dtl : {}
+  group_iam    = local.group_iam_dtl
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
@@ -120,6 +119,7 @@ module "dtl-2-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_dtl : {}
   iam_additive = var.project_create == null ? local.iam_dtl : {}
+  group_iam    = local.group_iam_dtl
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
@@ -144,6 +144,7 @@ module "dtl-exp-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_dtl : {}
   iam_additive = var.project_create == null ? local.iam_dtl : {}
+  group_iam    = local.group_iam_dtl
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",

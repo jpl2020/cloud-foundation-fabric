@@ -11,3 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+locals {
+  groups     = { for k, v in var.groups : k => "${v}@${var.organization.domain}" }
+  groups_iam = { for k, v in local.groups : k => "group:${v}" }
+}

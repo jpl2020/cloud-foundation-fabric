@@ -17,13 +17,13 @@
 ###############################################################################
 
 module "lod-vpc" {
-  count      = can(var.network.network) ? 0 : 1
+  count      = var.network_config.network != null ? 0 : 1
   source     = "../../../modules/net-vpc"
   project_id = module.lod-prj.project_id
-  name       = "${local.prefix_lod}-vpc"
+  name       = "${local.prefix_lod}-lod-vpc"
   subnets = [
     {
-      ip_cidr_range      = var.vpc_subnet_range
+      ip_cidr_range      = var.network_config.vpc_subnet_range.load
       name               = "subnet"
       region             = var.region
       secondary_ip_range = {}
@@ -32,15 +32,15 @@ module "lod-vpc" {
 }
 
 module "lod-vpc-firewall" {
-  count        = can(var.network.network) ? 0 : 1
+  count        = var.network_config.network != null ? 0 : 1
   source       = "../../../modules/net-vpc-firewall"
   project_id   = module.lod-prj.project_id
   network      = module.lod-vpc[0].name
-  admin_ranges = [var.vpc_subnet_range]
+  admin_ranges = values(module.lod-vpc[0].subnet_ips)
 }
 
 module "lod-nat" {
-  count          = can(var.network.network) ? 0 : 1
+  count          = var.network_config.network != null ? 0 : 1
   source         = "../../../modules/net-cloudnat"
   project_id     = module.lod-prj.project_id
   region         = var.region

@@ -13,44 +13,34 @@
 # limitations under the License.
 
 locals {
+  group_iam_lod = {
+    "${local.groups.data-engineers}" = [
+      "roles/compute.viewer",
+      "roles/dataflow.admin",
+      "roles/dataflow.developer",
+      "roles/viewer",
+    ]
+  }
   iam_lod = {
-    # "roles/bigquery.jobUser" = [
-    #   module.load-sa-df-0.iam_email
-    # ]
-    # "roles/compute.viewer" = [
-    #   # module.orch-sa-cmp-0.iam_email,
-    #   # module.load-sa-df-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/compute.serviceAgent" = [
-    #   "serviceAccount:${module.load-project.service_accounts.robots.compute}"
-    # ]
-    # "roles/dataflow.admin" = [
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers,
-    #   # TODO: optimize permissions (worker)
-    #   module.load-sa-df-0.iam_email
-    # ]
-    # "roles/dataflow.developer" = [
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/dataflow.worker" = [
-    #   module.load-sa-df-0.iam_email
-    # ]
-    # "roles/dataflow.serviceAgent" = [
-    #   # module.load-sa-df-0.iam_email
-    #   "serviceAccount:${module.load-project.service_accounts.robots.dataflow}"
-    # ]
-    # #TODO check if possible to restrict to object creator
-    # "roles/storage.objectAdmin" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   "serviceAccount:${module.load-project.service_accounts.robots.dataflow}"
-    # ]
-    # "roles/viewer" = [
-    #   local.groups_iam.data-engineers
-    # ]
+    "roles/bigquery.jobUser" = [
+      module.lod-sa-df-0.iam_email
+    ]
+    "roles/compute.serviceAgent" = [
+      "serviceAccount:${module.lod-prj.service_accounts.robots.compute}"
+    ]
+    "roles/dataflow.admin" = [
+      module.orc-sa-cmp-0.iam_email,
+      module.lod-sa-df-0.iam_email
+    ]
+    "roles/dataflow.worker" = [
+      module.lod-sa-df-0.iam_email
+    ]
+    "roles/dataflow.serviceAgent" = [
+      "serviceAccount:${module.lod-prj.service_accounts.robots.dataflow}"
+    ]
+    "roles/storage.objectAdmin" = [
+      "serviceAccount:${module.lod-prj.service_accounts.robots.dataflow}"
+    ]
   }
   prefix_lod = "${var.prefix}-lod"
 }
@@ -69,6 +59,7 @@ module "lod-prj" {
   # additive IAM bindings avoid disrupting bindings in existing project
   iam          = var.project_create != null ? local.iam_lod : {}
   iam_additive = var.project_create == null ? local.iam_lod : {}
+  # group_iam    = local.group_iam_lod
   services = concat(var.project_services, [
     "bigquery.googleapis.com",
     "bigqueryreservation.googleapis.com",
