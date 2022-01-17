@@ -39,5 +39,5 @@ module "lod-cs-df-0" {
   prefix         = local.prefix_lod
   storage_class  = "REGIONAL"
   location       = var.region
-  encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-bq.id, null) : null
+  encryption_key = var.cmek_encryption ? try(module.kms[0].keys.key-gcs.id, null) : null
 }
