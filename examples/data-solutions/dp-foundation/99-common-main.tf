@@ -39,7 +39,13 @@ module "kms" {
     },
     key-cmp = {
       "roles/cloudkms.cryptoKeyEncrypterDecrypter" = [
+        "serviceAccount:${module.orc-prj.service_accounts.robots.artifactregistry}",
+        "serviceAccount:${module.orc-prj.service_accounts.robots.container-engine}",
+        "serviceAccount:${module.orc-prj.service_accounts.robots.container-system}",
         "serviceAccount:${module.orc-prj.service_accounts.robots.composer}",
+        "serviceAccount:${module.orc-prj.service_accounts.robots.pubsub}",
+        "serviceAccount:${module.orc-prj.service_accounts.robots.storage}",
+
       ]
     },
     key-df = {
