@@ -14,52 +14,59 @@
 
 locals {
   iam_orc = {
-    # "roles/bigquery.dataEditor" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.transf-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/bigquery.dataViewer" = [
-    #   local.groups_iam.cloud-architects,
-    #   local.groups_iam.data-scientists
-    # ]
-    # "roles/bigquery.jobUser" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.transf-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers,
-    #   local.groups_iam.cloud-architects
-    # ]
-    # "roles/composer.admin" = [
-    #   local.groups_iam.cloud-architects
-    # ]
-    # "roles/composer.environmentAndStorageObjectAdmin" = [
-    #   local.groups_iam.data-engineers
-    # ]
-    # "roles/composer.worker" = [
-    #   module.orch-sa-cmp-0.iam_email
-    # ]
-    # "roles/iap.httpsResourceAccessor" = [
-    #   local.groups_iam.data-engineers,
-    #   local.groups_iam.cloud-architects
-    # ]
-    # "roles/storage.objectAdmin" = [
-    #   module.load-sa-df-0.iam_email,
-    #   module.orch-sa-cmp-0.iam_email,
-    #   local.groups_iam.data-engineers,
-    #   local.groups_iam.cloud-architects
-    # ]
-    # "roles/storage.admin" = [
-    #   local.groups_iam.data-engineers,
-    #   local.groups_iam.cloud-architects,
-    #   # TODO: restrict to storage.buckets.list/get (role for this does not natively exist)
-    #   module.load-sa-df-0.iam_email,
-    #   module.transf-sa-df-0.iam_email
-    # ]
-    # "roles/cloudbuild.builds.editor" = [
-    #   local.groups_iam.cloud-architects
-    # ]
+    "roles/bigquery.dataEditor" = [
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
+    ]
+    "roles/bigquery.jobUser" = [
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email,
+      module.orc-sa-cmp-0.iam_email,
+    ]
+    "roles/composer.worker" = [
+      module.orc-sa-cmp-0.iam_email
+    ]
+    "roles/storage.objectAdmin" = [
+      module.load-sa-df-0.iam_email,
+      module.orch-sa-cmp-0.iam_email,
+    ]
+    "roles/storage.admin" = [
+      module.lod-sa-df-0.iam_email,
+      module.trf-sa-df-0.iam_email
+    ]
+  }
+  iam_group_orc = {
+    "roles/bigquery.dataEditor" = [
+      local.groups_iam.data-engineers
+    ]
+    "roles/bigquery.dataViewer" = [
+      local.groups_iam.data-scientists
+    ]
+    "roles/bigquery.jobUser" = [
+      local.groups_iam.data-engineers,
+    ]
+    "roles/composer.admin" = [
+      local.groups_iam.data-engineers
+    ]
+    "roles/composer.environmentAndStorageObjectAdmin" = [
+      local.groups_iam.data-engineers
+    ]
+    "roles/composer.worker" = [
+      module.orc-sa-cmp-0.iam_email
+    ]
+    "roles/iap.httpsResourceAccessor" = [
+      local.groups_iam.data-engineers,
+    ]
+    "roles/storage.objectAdmin" = [
+      local.groups_iam.data-engineers,
+    ]
+    "roles/storage.admin" = [
+      local.groups_iam.data-engineers,
+    ]
+    "roles/cloudbuild.builds.editor" = [
+      local.groups_iam.data-engineers
+    ]
   }
   prefix_orc = "${var.prefix}-orc"
 }
